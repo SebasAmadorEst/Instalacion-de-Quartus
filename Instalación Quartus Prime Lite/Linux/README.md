@@ -40,12 +40,37 @@ Abre una terminal y entra en la carpeta de descargas. En una instalación de Ubu
 
 ```bash
 cd "$(xdg-user-dir DOWNLOAD)"
-ls -lh qinst-lite-linux-25.1std-1129.run
-chmod +x qinst-lite-linux-25.1std-1129.run
+ls -lh
+```
+
+**Comprueba primero el nombre real del instalador.** Si coincide con el de esta guía, ejecuta:
+
+```bash
+chmod +x ./qinst-lite-linux-25.1std-1129.run
 ./qinst-lite-linux-25.1std-1129.run
 ```
 
 Si `xdg-user-dir` no está disponible, usa `cd ~/Descargas` o `cd ~/Downloads` según corresponda.
+
+### 3.1. Error: «No existe el archivo o el directorio» al ejecutar el instalador
+
+Si `ls`, `chmod` y `./qinst...run` responden que el archivo no existe, **no significa necesariamente que Quartus esté dañado**: el nombre escrito puede no coincidir, la descarga puede estar en otra carpeta o puede no haber terminado.
+
+1. Confirma la ubicación actual y lista los archivos:
+
+   ```bash
+   cd "$(xdg-user-dir DOWNLOAD)"
+   pwd
+   ls -lh
+   ```
+
+2. Busca instaladores `.run` en Descargas y sus subcarpetas inmediatas:
+
+   ```bash
+   find "$(xdg-user-dir DOWNLOAD)" -maxdepth 2 -type f -iname '*.run'
+   ```
+
+3. Copia **el nombre exacto** del archivo que aparezca y úsalo en `chmod +x` y `./nombre-real.run`. Si no aparece, revisa las descargas del navegador y vuelve a descargarlo desde la web oficial si hace falta. No cambies el nombre a ciegas.
 
 El `.run` extrae los archivos temporales y abre el instalador gráfico cuando hay un entorno de escritorio disponible.
 
@@ -83,25 +108,125 @@ Altera documenta el ejecutable Linux en la ruta relativa:
 <directorio-de-instalación>/quartus/bin/quartus
 ```
 
-Si, por ejemplo, elegiste `~/altera_lite/25.1` como directorio base, prueba:
+**Atención: la carpeta de la versión puede llamarse `25.1std`, no `25.1`.** En una instalación real de Quartus Prime Lite 25.1, la carpeta encontrada fue `~/altera_lite/25.1std`.
+
+### 4.1. Error: «No existe el archivo o el directorio» al abrir Quartus
+
+Si ejecutas:
 
 ```bash
 "$HOME/altera_lite/25.1/quartus/bin/quartus"
 ```
 
-La ruta es un **ejemplo**, no una garantía de dónde quedó instalado. Comprueba la ubicación que seleccionaste en el instalador. Si necesitas localizarlo:
+y obtienes `No existe el archivo o el directorio`, **comprueba primero el nombre de la carpeta de instalación**:
+
+```bash
+ls -lah "$HOME/altera_lite"
+```
+
+Por ejemplo, si la salida muestra `25.1std`, la ruta correcta para esa instalación es:
+
+```bash
+"$HOME/altera_lite/25.1std/quartus/bin/quartus"
+```
+
+Si tampoco funciona, localiza el ejecutable real sin asumir la ruta:
 
 ```bash
 find "$HOME" -type f -path '*/quartus/bin/quartus' 2>/dev/null
 ```
 
-Para abrirlo desde cualquier carpeta, puedes añadir el directorio `quartus/bin` a tu `PATH` en `~/.bashrc`, sustituyendo la ruta por la real:
+Comprueba el archivo encontrado con `ls -lh RUTA_ENCONTRADA` y ejecútalo con su ruta absoluta entre comillas. Si el archivo **sí existe** pero Bash sigue mostrando un error similar, podría tratarse de bibliotecas o del intérprete de ejecución; conserva el mensaje exacto para diagnosticarlo. No reinstales antes de comprobarlo.
+
+### 4.2. Primera ejecución
+
+Al iniciar correctamente Quartus Prime Lite 25.1, puede aparecer una ventana de bienvenida con el botón **Launch Quartus Lite**. Haz clic para entrar al entorno principal. **Esa ventana confirma que el programa se inicia**, pero todavía debes realizar la prueba de síntesis de la sección 5 para verificar el flujo de trabajo.
+
+### 4.3. Abrir Quartus desde cualquier terminal (opcional)
+
+Añade a tu `~/.bashrc` el directorio **real** `quartus/bin` (en el ejemplo, `25.1std`):
 
 ```bash
-export PATH="$HOME/altera_lite/25.1/quartus/bin:$PATH"
+export PATH="$HOME/altera_lite/25.1std/quartus/bin:$PATH"
 ```
 
-Cierra y vuelve a abrir la terminal o ejecuta `source ~/.bashrc`. Después prueba `quartus`.
+Cierra y vuelve a abrir la terminal o ejecuta `source ~/.bashrc`. Después prueba `quartus`. **Este cambio no crea un icono en el menú de aplicaciones**; para ello sigue la sección 4.4.
+
+### 4.4. Hacer que Quartus aparezca como aplicación en Ubuntu
+
+Es posible que Quartus abra desde la terminal, pero **no aparezca al buscarlo en el menú de aplicaciones**. Esto se resuelve creando un lanzador `.desktop` para tu usuario.
+
+**Paso 1.** Comprueba que el ejecutable existe:
+
+```bash
+test -f "$HOME/altera_lite/25.1std/quartus/bin/quartus" && echo "Ejecutable encontrado"
+```
+
+Si no aparece el mensaje, vuelve a la sección 4.1 y utiliza la ruta real.
+
+**Paso 2.** Crea la carpeta de lanzadores y el archivo:
+
+```bash
+mkdir -p "$HOME/.local/share/applications"
+nano "$HOME/.local/share/applications/quartus-lite.desktop"
+```
+
+**Paso 3.** Pega este contenido, **sustituyendo `/home/lover` por tu propia ruta personal** y ajustando `25.1std` si tu instalación está en otro lugar:
+
+```ini
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Quartus Prime Lite 25.1
+Comment=Software de diseño y desarrollo FPGA
+Exec=/home/lover/altera_lite/25.1std/quartus/bin/quartus
+Icon=applications-engineering
+Terminal=false
+Categories=Development;Education;Electronics;
+StartupNotify=true
+```
+
+**Importante:** en un archivo `.desktop`, no confíes en que `~` o `$HOME` se expandan dentro de `Exec=`. Utiliza la ruta absoluta. El icono indicado es genérico.
+
+**Paso 4.** Guarda en Nano con `Ctrl + O`, `Enter` y sal con `Ctrl + X`.
+
+**Paso 5.** Opcionalmente, actualiza la base de datos de aplicaciones:
+
+```bash
+update-desktop-database "$HOME/.local/share/applications"
+```
+
+Si `update-desktop-database` no está disponible, puedes omitirlo. Abre el menú de aplicaciones y busca **Quartus Prime Lite 25.1**. Si no aparece inmediatamente, cierra sesión y vuelve a iniciarla.
+
+**Paso 6.** Cuando aparezca, puedes abrirlo y hacer clic derecho en su icono del Dock para seleccionar **Añadir a favoritos**.
+
+#### Alternativa: crear el lanzador automáticamente
+
+Si tu instalación está en `~/altera_lite/25.1std`, este bloque evita editar manualmente tu nombre de usuario:
+
+```bash
+QUARTUS_EXE="$HOME/altera_lite/25.1std/quartus/bin/quartus"
+if [ ! -f "$QUARTUS_EXE" ]; then
+  echo "No se encontró Quartus en: $QUARTUS_EXE"
+else
+  mkdir -p "$HOME/.local/share/applications"
+  cat > "$HOME/.local/share/applications/quartus-lite.desktop" <<EOF_DESKTOP
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Quartus Prime Lite 25.1
+Comment=Software de diseño FPGA
+Exec=$QUARTUS_EXE
+Icon=applications-engineering
+Terminal=false
+Categories=Development;Education;Electronics;
+StartupNotify=true
+EOF_DESKTOP
+  echo "Acceso directo creado. Busca Quartus en el menú de aplicaciones."
+fi
+```
+
+**Nota:** si la ruta contiene espacios, es preferible editar y validar el campo `Exec` del lanzador manualmente, siguiendo la especificación de archivos `.desktop`.
 
 ## 5. Comprobar que funciona
 
@@ -140,11 +265,13 @@ Si la placa está conectada, comprueba la detección en **Tools → Programmer �
 | Síntoma | Qué revisar |
 |---|---|
 | `Permission denied` al abrir `.run` | `chmod +x archivo.run`; permisos de carpeta y montaje `noexec`. |
-| `No such file or directory` | Comprueba nombre y ubicación con `pwd` y `ls`; verifica arquitectura y dependencias si el archivo existe. |
+| `ls`, `chmod` o `./qinst...run`: `No existe el archivo o el directorio` | Verifica `pwd`, `ls -lh` y el nombre real del archivo. Sigue la **sección 3.1**. |
+| `.../25.1/quartus/bin/quartus`: `No existe el archivo o el directorio` | La carpeta podría llamarse **`25.1std`**. Ejecuta `ls -lah ~/altera_lite` y sigue la **sección 4.1**. |
+| Quartus abre desde terminal pero no aparece en Aplicaciones | Crea un archivo `.desktop` siguiendo la **sección 4.4**. |
 | No abre la ventana | Revisa sesión gráfica, bibliotecas faltantes y compatibilidad del SO; consulta la salida de terminal. |
 | Error de bibliotecas compartidas | Revisa el mensaje exacto y la compatibilidad de la versión; instala únicamente paquetes apropiados para tu distribución. |
 | No aparece la FPGA | Falta el paquete de dispositivos o esa familia no es compatible con la versión. |
-| No encuentra `quartus` | Usa la ruta absoluta al ejecutable o ajusta `PATH`. |
+| No encuentra `quartus` como comando | Usa la ruta absoluta al ejecutable o ajusta `PATH` según la **sección 4.3**. |
 | Error de licencia | Comprueba que instalaste **Lite** y que el aviso no pertenece a una herramienta adicional. |
 | USB-Blaster no detectado | Revisa cable, alimentación, `lsusb`, permisos udev y documentación de la placa. |
 | Falló la compilación | Lee **Messages**: sintaxis, top-level, archivos, familia FPGA y restricciones. |
@@ -155,9 +282,12 @@ Si la placa está conectada, comprueba la detección en **Tools → Programmer �
 - [ ] Compatibilidad comprobada en la matriz oficial
 - [ ] Espacio libre suficiente
 - [ ] Instalador Lite 25.1 descargado de Altera
+- [ ] Nombre y ubicación del `.run` verificados
 - [ ] Permisos de ejecución configurados
 - [ ] Dispositivos FPGA instalados
+- [ ] Ruta de instalación identificada (`25.1std` u otra)
 - [ ] Quartus abre y muestra su versión
+- [ ] Acceso directo creado y visible en Aplicaciones (opcional)
 - [ ] VHDL analizado y sintetizado sin errores
 - [ ] Compilación completa probada, si aplica
 - [ ] Programador comprobado, solo si hay placa física

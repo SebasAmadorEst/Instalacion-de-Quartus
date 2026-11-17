@@ -16,21 +16,21 @@ Esta advertencia aparece porque no se ha especificado cuántos procesadores lóg
 
 **1. Localizar el archivo de configuración**
 
-Abre una terminal en Ubuntu y ejecuta:
+Dirígete a la carpeta donde guardaste el proyecto `and_gate`, desde la cual agregaste el archivo VHDL a Quartus.
 
-```bash
-find "$HOME" -type f -name "and_gate.qsf" 2>/dev/null
-```
+En la carpeta del proyecto encontrarás un archivo llamado:
 
-El archivo `.qsf` se genera automáticamente al crear el proyecto y contiene sus configuraciones.
+`and_gate.qsf`
+
+Este archivo se genera automáticamente al crear el proyecto y contiene sus configuraciones.
 
 **2. Abrir el archivo**
 
-Utiliza Nano, reemplazando la ruta por la ubicación real de tu proyecto:
+Abre `and_gate.qsf` utilizando cualquier editor de texto, como:
 
-```bash
-nano ~/Descargas/compuerta_and/and_gate.qsf
-```
+- Bloc de notas (Windows).
+- Editor de texto (Linux).
+- Visual Studio Code (Windows o Linux).
 
 **3. Agregar la configuración**
 
@@ -48,11 +48,7 @@ El número puede modificarse dependiendo de los recursos del equipo.
 
 **4. Guardar los cambios**
 
-En Nano:
-
-1. Presiona `Ctrl + O`.
-2. Presiona `Enter`.
-3. Presiona `Ctrl + X`.
+Guarda el archivo `and_gate.qsf` desde el editor de texto utilizado.
 
 **5. Volver a compilar**
 
@@ -61,6 +57,8 @@ Regresa a Quartus y ejecuta:
 **Processing → Start → Start Analysis & Synthesis**
 
 La advertencia `18236` debería desaparecer.
+
+Este procedimiento es válido tanto para **Windows como para Linux**, ya que el archivo `.qsf` utiliza el mismo formato en ambos sistemas operativos.
 
 ---
 
@@ -162,6 +160,8 @@ La simulación no es necesaria para esta prueba básica de instalación.
 
 Se comprobó el funcionamiento de **Quartus Prime Lite Edition 25.1 en Ubuntu** mediante el desarrollo y la compilación de una compuerta AND en VHDL.
 
+El procedimiento descrito también puede realizarse en **Windows**, ya que las herramientas y los archivos utilizados son equivalentes en ambos sistemas operativos.
+
 Las pruebas permitieron verificar que:
 
 - Quartus Prime Lite se ejecuta correctamente.
@@ -171,6 +171,8 @@ Las pruebas permitieron verificar que:
 - Las etapas de compilación completa se ejecutan correctamente.
 - RTL Viewer representa gráficamente el circuito diseñado.
 
-**Resultado final:** la instalación y configuración de Quartus Prime Lite Edition 25.1 se verificó satisfactoriamente mediante un proyecto funcional de lógica digital.
+**Resultado final:** la instalación y configuración de Quartus Prime Lite Edition 25.1 se verificó satisfactoriamente en Ubuntu mediante un proyecto funcional de lógica digital.
+
+La misma prueba puede utilizarse para verificar una instalación en Windows, aunque los resultados documentados corresponden a la ejecución realizada en Ubuntu.
 
 No fue necesario disponer de una FPGA física para realizar estas comprobaciones.

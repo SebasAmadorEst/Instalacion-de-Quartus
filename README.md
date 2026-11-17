@@ -43,15 +43,6 @@ El repositorio incluye un ejemplo mínimo: [compuerta AND de dos entradas](ejemp
 - [Sistemas operativos compatibles](https://www.altera.com/developers/software/os-support)
 - [Manual de instalación y licenciamiento](https://www.intel.com/programmable/technical-pdfs/683472.pdf)
 
-## 🗣️ Guion para presentar
-
-1. **Introducción (1 min):** qué es una FPGA, qué es Quartus y por qué se eligió Lite.
-2. **Repositorio (1 min):** explicar la estructura y seleccionar Windows o Linux.
-3. **Windows (3 min):** requisitos, descarga, instalador, dispositivos y primer inicio.
-4. **Linux (3 min):** Ubuntu, permisos del instalador, paquetes y ejecución desde terminal.
-5. **Verificación (2 min):** abrir el VHDL, crear proyecto, analizar y sintetizar.
-6. **Cierre (1 min):** errores frecuentes, diferencias entre compilar y programar, fuentes.
-
 **Nota de transparencia:** si presentas Windows desde Ubuntu, muestra la guía documentada y aclara que los pasos de Windows proceden de las instrucciones oficiales, no de una instalación realizada en ese equipo.
 
 ## 📄 Uso

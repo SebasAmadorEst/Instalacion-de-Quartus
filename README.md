@@ -8,7 +8,7 @@
 
 | 🪟 Windows | 🐧 Linux |
 |---|---|
-| [**Instalación en Windows 10/11 →**](InstalaciónQuartusPrimeLite/Windows/README.md) | [**Instalación en Ubuntu y otras distribuciones →**](Linux/README.md) |
+| [**Instalación en Windows 10/11 →**](Instalación%20Quartus%20Prime%20Lite/Windows/README.md) | [**Instalación en Ubuntu y otras distribuciones →**](Instalación%20Quartus%20Prime%20Lite/Linux/README.md) |
 
 ## ¿Qué es Quartus Prime?
 
